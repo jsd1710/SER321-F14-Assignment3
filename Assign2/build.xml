@@ -1,0 +1,95 @@
+<project name="Cst420 Basic Rmi Example" default="targets" basedir=".">
+
+	<!-- set global properties for this build -->
+	<property name="src" value="src" />
+	<property name="build" value="classes" />
+	<property name="lib" value="lib" />
+	<property name="hostId" value="localhost" />
+	<property name="regPort" value="2222" />
+
+	<path id="compile.classpath">
+		<pathelement location="${build}"/>
+	</path>
+
+	<target name="checkos">
+		<condition property="os" value="windows">
+			<os family="windows" />
+		</condition>
+		<condition property="os" value="unix">
+			<os family="unix" />
+		</condition>
+		<condition property="os" value="mac">
+			<os family="mac" />
+		</condition>
+	</target>
+
+	<target name="targets" depends="checkos">
+		<echo message="targets are clean, prepare, compile, execute.server, execute.client"/>
+		<echo message="java home is: ${java.home}"/>
+		<echo message="os family is: ${os}"/>
+		<echo>
+         start server with: ant execute.server -DhostId=192.168.2.2 -DregPort=2222
+      </echo>
+		<echo>
+         start client with: ant execute.client -DhostId=192.168.2.2 -DregPort=2222
+      </echo>
+	</target>
+
+	<target name="prepare">
+		<echo message="home defined as: ${home}" />
+		<mkdir dir="${build}" />
+		<javac srcdir="${src}"
+   	             includeantruntime="false"
+   	             destdir="${build}">
+			<classpath refid="compile.classpath"/>
+		</javac>
+		<rmic classname="server.WaypointServerImpl" base="${build}">
+			<classpath refid="compile.classpath"/>
+		</rmic>
+	</target>
+
+	<target name="execute.client" depends="prepare"
+           description="Start client">
+		<echo message="user.dir is: ${user.dir}"/>
+		<echo message="command line client: java -cp classes -Djava.security.policy=policyClient RMIClient ${hostId} ${regPort}" />
+		<java classname="client.WaypointGUI" fork="yes">
+			<classpath refid="compile.classpath"/>
+			<sysproperty key="java.security.policy" value="policyClient"/>
+			<arg value="${hostId}"/>
+			<arg value="${regPort}"/>
+		</java>
+	</target>
+
+	<target name="execute.server" depends="prepare"
+           description="Using parallel task, start server and client">
+		<parallel>
+			<exec dir="${basedir}"
+             executable="${java.home}/bin/rmiregistry.exe"
+             osfamily="windows">
+				<arg value="${regPort}"/>
+				<env key="CLASSPATH" path="${basedir}/${build}"/>
+			</exec>
+			<exec dir="${basedir}"
+             executable="rmiregistry" osfamily="unix">
+				<arg value="${regPort}"/>
+				<env key="CLASSPATH" path="${basedir}/${build}"/>
+			</exec>
+			<sequential>
+				<sleep seconds="10"/>
+				<java classname="server.WaypointServerImpl" fork="yes">
+					<sysproperty key="java.security.policy" value="policyServer"/>
+					<sysproperty key="java.rmi.server.hostname" value="${hostId}"/>
+					<arg value="${hostId}"/>
+					<arg value="${regPort}"/>
+					<classpath refid="compile.classpath"/>
+				</java>
+			</sequential>
+		</parallel>
+	</target>
+
+	<target name="clean">
+		<!-- Delete the ${build} directory tree -->
+		<delete dir="${build}" />
+	</target>
+
+</project>
