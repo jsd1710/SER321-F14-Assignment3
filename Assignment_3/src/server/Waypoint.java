@@ -49,7 +49,7 @@ public class Waypoint extends Object implements java.io.Serializable
 		this.ele = ele;
 		this.name = name;
 	}
-
+	
 	public double distanceGCTo(Waypoint wp, int scale) 
 	{
 		double ret = 0.0;

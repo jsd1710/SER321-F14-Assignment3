@@ -380,18 +380,29 @@ public class WaypointGUI extends JFrame implements ActionListener, ItemListener
 		if(e.getStateChange() == ItemEvent.SELECTED)
 		{
 			String waypointItem = (String)e.getItem();
-			try 
+			if (e.getItem() != "No Waypoints")
 			{
-				Waypoint waypointSelected = server.getWaypoint(waypointItem);
-				latIn.setText(String.valueOf(waypointSelected.lat));
-				lonIn.setText(String.valueOf(waypointSelected.lon));
-				eleIn.setText(String.valueOf(waypointSelected.ele));
-				nameIn.setText(waypointSelected.name);
+				try 
+				{
+					Waypoint waypointSelected = server.getWaypoint(waypointItem);
+					latIn.setText(String.valueOf(waypointSelected.lat));
+					lonIn.setText(String.valueOf(waypointSelected.lon));
+					eleIn.setText(String.valueOf(waypointSelected.ele));
+					nameIn.setText(waypointSelected.name);
+				}
+				catch(Exception ex)
+				{
+					ex.printStackTrace();
+				}
 			}
-			catch(Exception ex)
+			else
 			{
-				ex.printStackTrace();
+				latIn.setText("No valid Waypoint selected.");
+				lonIn.setText("No valid Waypoint selected.");
+				eleIn.setText("No valid Waypoint selected.");
+				nameIn.setText("No valid Waypoint selected.");
 			}
+			
 		}
 	}
 
@@ -406,6 +417,6 @@ public class WaypointGUI extends JFrame implements ActionListener, ItemListener
 			regPort = args[1];
 		}
 		System.setSecurityManager(new RMISecurityManager());
-		WaypointGUI waypointclient = new WaypointGUI(hostId, regPort, "JACOB");
+		new WaypointGUI(hostId, regPort, "JACOB");
 	}
 }
