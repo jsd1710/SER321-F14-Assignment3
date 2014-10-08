@@ -1,15 +1,9 @@
-package client;
+package client.java;
 
 import java.rmi.*;
 import java.io.*;
 import server.*;
 
-/**
- * Purpose: demonstrate using the RMI API with a command line client
- * 
- * @author Tim Lindquist (Tim@asu.edu), ASU Polytechnic
- * @version June 2014
- */
 public class RMIClient 
 {
 	public static void main(String args[]) 

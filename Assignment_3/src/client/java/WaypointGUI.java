@@ -1,7 +1,6 @@
-package client;
+package client.java;
 
 import java.rmi.*;
-import java.io.*;
 
 import javax.swing.*;
 
@@ -13,36 +12,9 @@ import server.*;
 import java.text.DecimalFormat;
 
 /**
- * Copyright (c) 2014 Tim Lindquist, Software Engineering, Arizona State
- * University at the Polytechnic campus
- * <p/>
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation version 2 of the License.
- * <p/>
- * This program is distributed in the hope that it will be useful, but without
- * any warranty or fitness for a particular purpose.
- * <p/>
- * Please review the GNU General Public License at:
- * http://www.gnu.org/licenses/gpl-2.0.html see also:
- * https://www.gnu.org/licenses/gpl-faq.html so you are aware of the terms and
- * your rights with regard to this software. Or, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,USA
- * <p/>
  * Purpose: Java client UI for Waypoint management. This class creates Gui
  * components for a UI to manage waypoints. This software is meant to run on
  * OSX, and Windows Cygwin using g++.
- * <p/>
- * Ser321 Principles of Distributed Software Systems
- * 
- * @see <a
- *      href="http://pooh.poly.asu.edu/Cst420">http://pooh.poly.asu.edu/Cst420</a>
- * @see <a href="../../JavaWaypointGUI.png">JavaWaypointGUI.png</a>
- * @author Tim Lindquist (Tim.Lindquist@asu.edu) CIDSE - Software Engineering
- *         Ira Fulton Schools of Engineering, ASU Polytechnic
- * @file WaypointGUI.java
- * @date September, 2014
- * @license See above
  **/
 public class WaypointGUI extends JFrame implements ActionListener, ItemListener
 {
@@ -126,19 +98,13 @@ public class WaypointGUI extends JFrame implements ActionListener, ItemListener
 	protected JButton getAddrButt;
 
 	/**
-	 * getLatLonButt is the JButton labeled Get lat/lon for Addr. This button
-	 * will be used in a later assignment. When the user clicks this button, the
-	 * client uses a web service to obtain the latitude and longitude of the
-	 * address specified in the address text area.
-	 */
-	protected JButton getLatLonButt;
-
-	/**
 	 * distBearButt is the JButton bottom button. When the user clicks Distance
 	 * and Bearing, the direction and distance between the from waypoint and the
 	 * to waypoint should be displayed in the distBearIn text field.
 	 */
 	protected JButton distBearButt;
+	
+	protected JButton exportToJSONButton;
 
 	private JLabel latLab, lonLab, eleLab, nameLab, addrLab, fromLab, toLab;
 
@@ -206,15 +172,15 @@ public class WaypointGUI extends JFrame implements ActionListener, ItemListener
 		getAddrButt.setActionCommand("GetAddr");
 		getContentPane().add(getAddrButt);
 
-		getLatLonButt = new JButton("Get lat/lon for Addr");
-		getLatLonButt.setBounds(20, 220, 180, 25);
-		getLatLonButt.setActionCommand("GetLatLon");
-		getContentPane().add(getLatLonButt);
-
 		distBearButt = new JButton("Distance and Bearing");
 		distBearButt.setBounds(15, 260, 190, 25);
 		distBearButt.setActionCommand("Distance");
 		getContentPane().add(distBearButt);
+		
+		exportToJSONButton = new JButton("Export to JSON");
+		exportToJSONButton.setBounds(15, 220, 190, 25);
+		exportToJSONButton.setActionCommand("Export to JSON");
+		getContentPane().add(exportToJSONButton);
 
 		latIn = new JTextField("lat");
 		latIn.setBounds(250, 10, 230, 25);
@@ -259,8 +225,8 @@ public class WaypointGUI extends JFrame implements ActionListener, ItemListener
 		addWPButt.addActionListener(this);
 		modWPButt.addActionListener(this);
 		getAddrButt.addActionListener(this);
-		getLatLonButt.addActionListener(this);
 		distBearButt.addActionListener(this);
+		exportToJSONButton.addActionListener(this);
 		frWps.addItemListener(this);
 		toWps.addItemListener(this);
 		
@@ -305,6 +271,7 @@ public class WaypointGUI extends JFrame implements ActionListener, ItemListener
 			System.out.println("There are no waypoints.");
 		}
 	}
+	
 	public void actionPerformed(ActionEvent ae) 
 	{
 		String action = ae.getActionCommand();
@@ -367,6 +334,17 @@ public class WaypointGUI extends JFrame implements ActionListener, ItemListener
 				Waypoint w1 = server.getWaypoint(frWps.getSelectedItem().toString());
 				Waypoint w2 = server.getWaypoint(toWps.getSelectedItem().toString());
 				distBearIn.setText(format.format(server.getDistanceGCTo(w1, w2)) + "/" + format.format(server.getBearingGCInitTo(w1, w2)));
+			} 
+			catch (Exception e) 
+			{
+				e.printStackTrace();
+			}
+		}
+		if (action.equals("Export to JSON"))
+		{
+			try 
+			{
+				server.exportToJSON();
 			} 
 			catch (Exception e) 
 			{

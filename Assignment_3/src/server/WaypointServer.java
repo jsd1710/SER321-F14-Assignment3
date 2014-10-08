@@ -24,4 +24,6 @@ public interface WaypointServer extends Remote
    public double getDistanceGCTo(Waypoint w1, Waypoint w2) throws RemoteException;
    
    public double getBearingGCInitTo(Waypoint w1, Waypoint w2) throws RemoteException;
+
+   public void exportToJSON() throws RemoteException;
 }

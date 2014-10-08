@@ -24,6 +24,7 @@
 
 	<path id="compile.classpath">
 		<pathelement location="${build}" />
+		<pathelement location="${lib}/org.json-20140503.jar" />
 	</path>
 
 	<target name="targets">
@@ -51,6 +52,7 @@
 		<delete dir="${obj.dir}" failonerror="false" />
 		<delete dir="${dist.dir}" failonerror="false" />
 		<delete file="docs.jar" failonerror="false" />
+		<delete file="waypoints.json" failonerror="false" />
 	</target>
 
 	<target name="prepare">
@@ -188,7 +190,7 @@
 	<target name="execute.client" depends="prepare" description="Start client">
 		<echo message="user.dir is: ${user.dir}" />
 		<echo message="command line client: java -cp classes -Djava.security.policy=policyClient RMIClient ${hostId} ${regPort}" />
-		<java classname="client.WaypointGUI" fork="yes">
+		<java classname="client.java.WaypointGUI" fork="yes">
 			<classpath refid="compile.classpath" />
 			<sysproperty key="java.security.policy" value="policyClient" />
 			<arg value="${hostId}" />

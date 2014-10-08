@@ -1,20 +1,21 @@
 package server;
 
-import java.rmi.server.*;
-import java.rmi.*;
-import java.util.*;
 import java.io.*;
+import java.rmi.*;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.*;
+
+import org.json.*;
+
+
 
 /**
  * Purpose: demonstrate using the RMI API Implementation of employee server -
  * create a remote server object (with a couple of employees). Register the
  * remote server object with the rmi registry.
- * 
- * @author Tim Lindquist (Tim@asu.edu), ASU Polytechnic
- * @version June 2014
  */
 class WaypointServerImpl extends UnicastRemoteObject implements WaypointServer,
-		java.io.Serializable 
+		java.io.Serializable
 {
 	protected Hashtable<String, Waypoint> waypointList = new Hashtable<String, Waypoint>();
 
@@ -152,6 +153,47 @@ class WaypointServerImpl extends UnicastRemoteObject implements WaypointServer,
 		}
 	}
 
+	public void exportToJSON() throws RemoteException
+	{
+		JSONArray jsonArray = new JSONArray();
+		ArrayList<String> waypointArrayList = Collections.list(waypointList.keys());
+		for (int i = 0; i < waypointList.size(); i++)
+		{
+			String name = waypointArrayList.get(i);
+			Waypoint waypoint = waypointList.get(name);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("name", waypoint.name);
+			jsonObject.put("lat", waypoint.lat);
+			jsonObject.put("lon", waypoint.lon);
+			jsonObject.put("ele", waypoint.ele);
+			
+			jsonArray.put(jsonObject);
+		}
+		
+		Writer outputFile = null;
+		
+		try 
+		{
+			outputFile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("waypoints.json"), "utf-8"));
+			outputFile.write(jsonArray.toString());
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		finally 
+		{
+			try 
+			{
+				outputFile.close();
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public static void main(String args[]) 
 	{
 		try 
