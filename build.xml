@@ -132,7 +132,7 @@
 				<property name="compiler.arg" value="-std=c++0x" />
 				<property name="include.base" value="/" />
 				<property name="include.paths" value="opt/local/include,usr/local/include" />
-				<property name="linkflag" value="" />
+				<property name="linkflag" value="libjsonrpc.so" />
 				<property name="lib.list" value="stdc++,fltk" />
 				<property name="lib.dir" value="/opt/local/lib" />
 			</then>
@@ -154,7 +154,7 @@
 					<!-- For Redhat 64-bit OS's. -->
 					<property name="include.paths" value="usr/include,usr/local/include" />
 					<property name="include.base" value="/" />
-					<property name="linkflag" value="" />
+					<property name="linkflag" value="/usr/local/lib/libjson_linux-gcc-4.8.3_libmt.so" />
 				</then>
 			</elseif>
 		</if>
@@ -169,19 +169,19 @@
 				<cc outtype="executable" subsystem="console" outfile="${dist.dir}/waypoint.exe" objdir="${obj.dir}">
 					<compilerarg value="${compiler.arg}" />
 					<libset libs="${lib.list}" />
-					<fileset dir="${cpp.src.dir}" includes="WaypointGUI.cpp,samplemain.cpp" />
+					<fileset dir="${cpp.src.dir}" includes="WaypointGUI.cpp,WaypointClientCPP.cpp,Waypoint.cpp" />
 				</cc>
 			</then>
 			<else>
 				<cc outtype="executable" subsystem="console" outfile="${dist.dir}/waypoint" objdir="${obj.dir}">
 					<compilerarg value="${compiler.arg}" />
-					<includepath>
+					<!--<includepath>
 						<dirset dir="${include.base}" includes="${include.paths}" />
-					</includepath>
-					<!--<linkerarg value="${linkflag}"/>-->
-
+					</includepath>-->
+					<linkerarg value="${linkflag}"/>
+					<fileset dir="${cpp.src.dir}" includes="WaypointGUI.cpp,WaypointClientCPP.cpp"/>
 					<libset dir="${lib.dir}" libs="${lib.list}" />
-					<fileset dir="${cpp.src.dir}" includes="WaypointGUI.cpp,samplemain.cpp" />
+					
 				</cc>
 			</else>
 		</if>

@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<history>
+   <processor signature="gcc noversion nomachine -std=c++0x -c">
+      <target file="WaypointClientCPP.o" lastModified="1492020bda8">
+         <source file="../src/client/cpp/WaypointClientCPP.cpp" lastModified="14920173440"/>
+      </target>
+      <target file="WaypointGUI.o" lastModified="1492020b9c0">
+         <source file="../src/client/cpp/WaypointGUI.cpp" lastModified="14920208ec8"/>
+      </target>
+   </processor>
+</history>
