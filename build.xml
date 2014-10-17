@@ -132,7 +132,7 @@
 				<property name="compiler.arg" value="-std=c++0x" />
 				<property name="include.base" value="/" />
 				<property name="include.paths" value="opt/local/include,usr/local/include" />
-				<property name="linkflag" value="libjsonrpc.so" />
+				<property name="linkflag" value="" />
 				<property name="lib.list" value="stdc++,fltk" />
 				<property name="lib.dir" value="/opt/local/lib" />
 			</then>
@@ -169,7 +169,7 @@
 				<cc outtype="executable" subsystem="console" outfile="${dist.dir}/waypoint.exe" objdir="${obj.dir}">
 					<compilerarg value="${compiler.arg}" />
 					<libset libs="${lib.list}" />
-					<fileset dir="${cpp.src.dir}" includes="WaypointGUI.cpp,WaypointClientCPP.cpp,Waypoint.cpp" />
+					<fileset dir="${cpp.src.dir}" includes="WaypointGUI.cpp,WaypointClientCPP.cpp" />
 				</cc>
 			</then>
 			<else>
