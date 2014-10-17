@@ -155,7 +155,7 @@ class WaypointServerImpl extends UnicastRemoteObject implements WaypointServer,
 
 	public void exportToJSON() throws RemoteException
 	{
-		JSONArray jsonArray = new JSONArray();
+		JSONObject jsonWaypoints = new JSONObject(); //Object for easier Waypoint finds in external language.
 		ArrayList<String> waypointArrayList = Collections.list(waypointList.keys());
 		for (int i = 0; i < waypointList.size(); i++)
 		{
@@ -167,7 +167,7 @@ class WaypointServerImpl extends UnicastRemoteObject implements WaypointServer,
 			jsonObject.put("lon", waypoint.lon);
 			jsonObject.put("ele", waypoint.ele);
 			
-			jsonArray.put(jsonObject);
+			jsonWaypoints.put(name, jsonObject);
 		}
 		
 		Writer outputFile = null;
@@ -175,7 +175,7 @@ class WaypointServerImpl extends UnicastRemoteObject implements WaypointServer,
 		try 
 		{
 			outputFile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("waypoints.json"), "utf-8"));
-			outputFile.write(jsonArray.toString());
+			outputFile.write(jsonWaypoints.toString(4));
 		}
 		catch (IOException e)
 		{
