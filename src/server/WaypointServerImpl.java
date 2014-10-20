@@ -176,6 +176,7 @@ class WaypointServerImpl extends UnicastRemoteObject implements WaypointServer,
 		{
 			outputFile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("waypoints.json"), "utf-8"));
 			outputFile.write(jsonWaypoints.toString(4));
+			System.out.println("Successfully exported 'waypoints.json' file");
 		}
 		catch (IOException e)
 		{

@@ -154,7 +154,7 @@
 					<!-- For Redhat 64-bit OS's. -->
 					<property name="include.paths" value="usr/include,usr/local/include" />
 					<property name="include.base" value="/" />
-					<property name="linkflag" value="-Wl,/usr/local/lib/libjson_linux-gcc-4.8.3_libmt.so,/lib64/libm.so.6" />
+					<property name="linkflag" value="-Wl,/lib64/libjsoncpp.so,-lm" />
 				</then>
 			</elseif>
 		</if>
