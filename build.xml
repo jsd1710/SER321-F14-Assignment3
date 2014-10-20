@@ -155,6 +155,7 @@
 					<property name="include.paths" value="usr/include,usr/local/include" />
 					<property name="include.base" value="/" />
 					<property name="linkflag" value="/usr/local/lib/libjson_linux-gcc-4.8.3_libmt.so" />
+					<property name="linkflag2" value="/lib64/libm.so.6" />
 				</then>
 			</elseif>
 		</if>
@@ -175,11 +176,12 @@
 			<else>
 				<cc outtype="executable" subsystem="console" outfile="${dist.dir}/waypoint" objdir="${obj.dir}">
 					<compilerarg value="${compiler.arg}" />
-					<!--<includepath>
+					<includepath>
 						<dirset dir="${include.base}" includes="${include.paths}" />
-					</includepath>-->
+					</includepath>
 					<linkerarg value="${linkflag}"/>
-					<fileset dir="${cpp.src.dir}" includes="WaypointGUI.cpp,WaypointClientCPP.cpp"/>
+					<linkerarg value="${linkflag2}"/>
+					<fileset dir="${cpp.src.dir}" includes="WaypointGUI.cpp,WaypointClientCPP.cpp,Waypoint.cpp"/>
 					<libset dir="${lib.dir}" libs="${lib.list}" />
 					
 				</cc>

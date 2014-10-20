@@ -145,7 +145,7 @@ public:
 
 int main()
 {
-	//Waypoint wp;
+	Waypoint wp;
 	SampleStudentClient cm("Jacob Dobkins' Waypoint Browser");
 
 	return (Fl::run());
