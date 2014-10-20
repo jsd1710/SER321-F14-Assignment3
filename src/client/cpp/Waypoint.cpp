@@ -41,7 +41,7 @@ Waypoint::Waypoint(double aLat, double aLon, double anElevation, string aName) {
 }
 
 Waypoint::~Waypoint() {
-   cout << "Waypoint destructor.\n";
+   //cout << "Waypoint destructor.\n";
    lat=lon=ele=0; name="";
 }
 

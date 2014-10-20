@@ -10,7 +10,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include "Waypoint.hpp"
-#include <vector>
+#include <map>
 
 using namespace std;
 
@@ -22,7 +22,8 @@ using namespace std;
 class WaypointGUI: public Fl_Window
 {
 protected:
-	//vector<Waypoint> points;
+	map<string, Waypoint> waypoints;
+
 	/**
 	 * frWps is the Fl_Input_Choice in the upper left of the waypoint browser.
 	 */
@@ -123,10 +124,10 @@ public:
 	{
 		begin();
 		frWps = new Fl_Input_Choice(40, 10, 200, 25, "from");
-		frWps->add("from waypoint");
+		frWps->add("EMPTY");
 		frWps->value(0);
 		toWps = new Fl_Input_Choice(40, 45, 200, 25, "to");
-		toWps->add("to waypoint");
+		toWps->add("EMPTY");
 		toWps->value(0);
 		latIn = new Fl_Input(270, 10, 230, 25, "lat");
 		lonIn = new Fl_Input(270, 45, 230, 25, "lon");
