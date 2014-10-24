@@ -132,7 +132,7 @@
 				<property name="compiler.arg" value="-std=c++0x" />
 				<property name="include.base" value="/" />
 				<property name="include.paths" value="opt/local/include,usr/local/include" />
-				<property name="linkflag" value="" />
+				<property name="linkflag" value="-Wl,/usr/lib/libjsoncpp.dylib,/usr/lib/libc.dylib" /> <!-- This should be correct for Mac -->
 				<property name="lib.list" value="stdc++,fltk" />
 				<property name="lib.dir" value="/opt/local/lib" />
 			</then>
@@ -154,7 +154,7 @@
 					<!-- For Redhat 64-bit OS's. -->
 					<property name="include.paths" value="usr/include,usr/local/include" />
 					<property name="include.base" value="/" />
-					<property name="linkflag" value="-Wl,/lib64/libjsoncpp.so,-lm" />
+					<property name="linkflag" value="-Wl,/lib64/libjsoncpp.so,-lm" /> <!-- This is for my Fedora 64-bit -->
 				</then>
 			</elseif>
 		</if>

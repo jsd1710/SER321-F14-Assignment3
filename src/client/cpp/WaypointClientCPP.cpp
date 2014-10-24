@@ -42,45 +42,52 @@ class SampleStudentClient: public WaypointGUI
 		SampleStudentClient* anInstance = (SampleStudentClient*) userdata;
 		Fl_Input_Choice * fromWPChoice = anInstance->frWps;
 		Fl_Input_Choice * toWPChoice = anInstance->toWps;
-		map<string, Waypoint> * waypoints = &anInstance->waypoints;
+		map < string, Waypoint > *waypoints = &anInstance->waypoints;
 
 		Json::Value root;   // will contains the root value after parsing.
 		Json::Reader reader;
 
-		ifstream waypointsFile ("waypoints.json", ifstream::binary); //Reads waypoints.json file.
+		ifstream waypointsFile("waypoints.json", ifstream::binary); //Reads waypoints.json file.
 
 		if (waypointsFile.is_open())
-		  {
-		    bool parsingSuccessful = reader.parse(waypointsFile, root, false);
+		{
+			bool parsingSuccessful = reader.parse(waypointsFile, root, false);
 			if (parsingSuccessful)
 			{
 				for (Json::ValueIterator itr = root.begin(); itr != root.end(); itr++)
 				{
 					string name(itr.key().asString());
-					double lat(root.get(name,"ERROR").get("lat",0).asDouble());
-					double lon(root.get(name,"ERROR").get("lon",0).asDouble());
-					double ele(root.get(name,"ERROR").get("ele",0).asDouble());
+					double lat(
+							root.get(name, "ERROR").get("lat", 0).asDouble());
+					double lon(
+							root.get(name, "ERROR").get("lon", 0).asDouble());
+					double ele(
+							root.get(name, "ERROR").get("ele", 0).asDouble());
 
 					fromWPChoice->add(name.c_str());
 					toWPChoice->add(name.c_str());
 
-					Waypoint wp(lat,lon,ele,name.c_str());
-					waypoints->insert(pair<string,Waypoint>(name.c_str(),wp));
+					Waypoint wp(lat, lon, ele, name.c_str());
+					waypoints->insert(pair<string, Waypoint>(name.c_str(), wp));
 
-					cout << "Added: " << itr.key().asString() << endl;
+					cout << "Added:		" << name << "(" << lat << ", " << lon << ", " << ele << ", " << name << ");" << endl;
 
 					/*
-					cout << waypoints->at(name.c_str()).lat<< endl;
-					cout << waypoints->at(name.c_str()).lon<< endl;
-					cout << waypoints->at(name.c_str()).ele<< endl;
-					cout << waypoints->at(name.c_str()).name<< endl;
-					*/
+					 cout << waypoints->at(name.c_str()).lat<< endl;
+					 cout << waypoints->at(name.c_str()).lon<< endl;
+					 cout << waypoints->at(name.c_str()).ele<< endl;
+					 cout << waypoints->at(name.c_str()).name<< endl;
+					 */
 
 				}
 
 			}
-		    waypointsFile.close();
-		  }
+			waypointsFile.close();
+		}
+		else
+		{
+			cout << "Error:		No 'waypoints.json' file found." << endl;
+		}
 
 
 
@@ -95,8 +102,8 @@ class SampleStudentClient: public WaypointGUI
 
 		string selected(fromWPChoice->value());
 
-		cout << "You clicked the remove waypoint button with " << selected
-				<< std::endl;
+		cout << "Removed:	" << selected << ";" << endl;
+
 
 		for (int i = 0; i < fromWPChoice->menubutton()->size(); i++)
 		{
@@ -152,28 +159,42 @@ class SampleStudentClient: public WaypointGUI
 		Fl_Input * theName = anInstance->nameIn;
 
 		string lat(theLat->value());
-		// what follows is not expedient, but shows how to convert to/from
-		// double and formatted C and C++ strings.
-		double latNum = atof(lat.c_str());  //convert from string to double
-		char latFormat[10];
-		sprintf(latFormat, "%4.4f", latNum); //format the double into a C string
-		string latCppStr(latFormat);   //convert formatted C str to C++ str
-
 		string lon(theLon->value());
 		string ele(theEle->value());
 		string name(theName->value());
 
 		Waypoint wp(atof(lat.c_str()),atof(lon.c_str()),atof(ele.c_str()),name.c_str());
 		waypoints->insert(pair<string, Waypoint>(name, wp));
-		cout << to_string(waypoints->at(name).ele)<< endl;
 
-		cout << "You clicked the add waypoint button lat: " << latCppStr
-				<< " lon: " << lon << " ele: " << ele << " name: " << name
-				<< endl;
+		cout << "Added:		" << name << "(" << lat << ", " << lon << ", " << ele << ", " << name << ");" << endl;
 
 		fromWPChoice->add(name.c_str());
 		toWPChoice->add(name.c_str());
 		fromWPChoice->value(name.c_str());
+	}
+	static void ClickedModifyWP(Fl_Widget * w, void * userdata)
+	{
+		SampleStudentClient* anInstance = (SampleStudentClient*) userdata;
+		map < string, Waypoint > *waypoints = &anInstance->waypoints;
+
+		Fl_Input * theLat = anInstance->latIn;
+		Fl_Input * theLon = anInstance->lonIn;
+		Fl_Input * theEle = anInstance->eleIn;
+		Fl_Input * theName = anInstance->nameIn;
+
+		string lat(theLat->value());
+		string lon(theLon->value());
+		string ele(theEle->value());
+		string name(theName->value());
+
+		Waypoint wp(atof(lat.c_str()), atof(lon.c_str()), atof(ele.c_str()),
+				name.c_str());
+
+		waypoints->erase(name);
+
+		waypoints->insert(pair<string, Waypoint>(name, wp));
+
+		cout << "Modified:	" << name << "(" << lat << ", " << lon << ", " << ele << ", " << name << ");" << endl;
 	}
 
 	static void SelectedFromWP(Fl_Widget * w, void * userdata)
@@ -183,7 +204,7 @@ class SampleStudentClient: public WaypointGUI
 		Fl_Input_Choice * frWps = anInstance->frWps;
 
 		string selected(frWps->value());
-		cout << "You selected from waypoint " << selected << endl;
+		cout << "Selected:	" << selected << ";" << endl;
 
 		anInstance->nameIn->value(waypoints->at(selected).name.c_str());
 		anInstance->latIn->value(to_string(waypoints->at(selected).lat).c_str());
@@ -198,6 +219,7 @@ public:
 		removeWPButt->callback(ClickedRemoveWP, (void*) this);
 		addWPButt->callback(ClickedAddWP, (void*) this);
 		frWps->callback(SelectedFromWP, (void*) this);
+		modWPButt->callback(ClickedModifyWP, (void*) this);
 		importJSONButt->callback(ClickedImportJSON, (void*) this);
 		callback(ClickedX);
 	}
